@@ -16,8 +16,10 @@
  
 import { httpRequest } from 'http-request';
 
-export async function getDatafile(sdkKey, ttl) {
+export async function getDatafile(sdkKey) {
   let datafile = '';
+  // Make sure to enable caching to outgoing request
+  // https://techdocs.akamai.com/purge-cache/docs/cache-strategies
   const datafileResponse = await httpRequest(`https://cdn.optimizely.com/datafiles/${sdkKey}.json`);
   if (datafileResponse.ok) {
     datafile = await datafileResponse.json();

@@ -14,57 +14,97 @@
  *    limitations under the License.
  */
 
+import { logger } from 'log';
 import {
   createInstance,
-  OptimizelyDecideOption,
+  enums as OptimizelyEnums,
 } from '@optimizely/optimizely-sdk/dist/optimizely.lite.es';
-import WORKERCONFIG from '../bundle.json';
+//} from '@optimizely/optimizely-sdk';
 import { getDatafile, dispatchEvent } from './optimizely_helper';
 
-const SDK_KEY = 'DCJwYAA77k2BRcsrj3d9b';
-const USER_ID = 'AwesomeUser';
-const FLAG_KEY = 'fastly_test';
-const WORKER_VERSION = WORKERCONFIG['edgeworker-version'];
+const AKAMAI_CLIENT_ENGINE = "javascript-sdk/akamai-edgeworker";
 
 export async function onClientRequest (request) {
-  try {
-    const datafile = getDatafile(SDK_KEY);
+  // fetch datafile from optimizely CDN and cache it with akamai for the given number of seconds
+  //const datafile = await getDatafile("YOUR_SDK_KEY_HERE");
+  const datafile = await getDatafile('DCJwYAA77k2BRcsrj3d9b');
 
-    const optimizelyClient = createInstance({
-      datafile,
-      eventDispatcher: { dispatchEvent }
-    });
+  if (datafile === '') {
+    logger.log(`[optimizely] Failed to fetch the datafile, please check the optimizely sdk key`);
+    sendWelcomeReponse(request);
+    return;    
+  }
 
-    const optimizelyUserContext = optimizelyClient.createUserContext(USER_ID);
-    const decision = optimizelyUserContext.decide(FLAG_KEY, [OptimizelyDecideOption.INCLUDE_REASONS, OptimizelyDecideOption.DISABLE_DECISION_EVENT]);    
-    const datafileRevision = optimizelyClient.getOptimizelyConfig().revision;
+  const optimizelyClient = createInstance({
+    datafile,
 
-    request.respondWith(
-      200, {},
-      `<html>
-        <body>
-          <h1>
-            Worker version: ${WORKER_VERSION}
-          </h1>
-          <div>
-            datafileRevision = ${datafileRevision} <br />
-            flagKey = ${decision.flagKey} <br />
-            enabled = ${decision.enabled} <br />
-            variationKey = ${decision.variationKey} <br />
-            reasons = ${decision.reasons} <br />
-          </div>
-        </body>
-      </html>`,
+    // keep the LOG_LEVEL to ERROR in production. Setting LOG_LEVEL to INFO or DEBUG can adversely impact performance.
+    logLevel: OptimizelyEnums.LOG_LEVEL.ERROR,
+
+    clientEngine: AKAMAI_CLIENT_ENGINE,
+
+    /***
+     * Optional event dispatcher. Please uncomment the following line if you want to dispatch an impression event to optimizely logx backend.
+     * When enabled, an event is dispatched asynchronously. It does not impact the response time for a particular worker but it will
+     * add to the total compute time of the worker and can impact fastly billing.
+     */
+    // eventDispatcher: { dispatchEvent }
+
+    /* Add other Optimizely SDK initialization options here if needed */
+  });
+ 
+  const optimizelyUserContext = optimizelyClient.createUserContext(
+    "USER_ID_HERE",
+    {
+      /* YOUR_OPTIONAL_ATTRIBUTES_HERE */
+    }
+  );
+
+  // --- Using Optimizely Config
+  const optimizelyConfig = optimizelyClient.getOptimizelyConfig();
+  logger.log(`[optimizely] Datafile Revision: ${optimizelyConfig.revision}`);
+
+  // --- For a single flag --- //
+  const decision = optimizelyUserContext.decide("YOUR_FLAG_HERE");
+  if (decision.enabled) {
+    logger.log(
+      `[optimizely] The Flag ${
+        decision.flagKey
+      } was Enabled for the user ${decision.userContext.getUserId()}`
     );
-  } catch (e) {
-    request.respondWith(
-      500, {},
-      `<html>
-        <body>
-          <h1>Error in worker: Version ${WORKER_VERSION} </h2>
-          <div>${e.message}</div>
-        </body>
-      </html>`,
+  } else {
+    logger.log(
+      `[optimizely] The Flag ${
+        decision.flagKey
+      } was Not Enabled for the user ${decision.userContext.getUserId()}`
     );
   }
+
+  // --- For all flags --- //
+  const allDecisions = optimizelyUserContext.decideAll();
+  Object.entries(allDecisions).forEach(([flagKey, decision]) => {
+    if (decision.enabled) {
+      logger.log(
+        `[optimizely] The Flag ${
+          decision.flagKey
+        } was Enabled for the user ${decision.userContext.getUserId()}`
+      );
+    } else {
+      logger.log(
+        `[optimizely] The Flag ${
+          decision.flagKey
+        } was Not Enabled for the user ${decision.userContext.getUserId()}`
+      );
+    }
+  });
+
+  sendWelcomeReponse(request);
+}
+
+function sendWelcomeReponse(request) {
+  request.respondWith(
+    200,
+    {"Content-Type": "text/plain"},
+    'Welcome to the Optimizely Starter Kit for Akamai Edge Workers. Check log messages in response headers for decision results.',
+  );
 }
