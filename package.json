@@ -1,0 +1,24 @@
+{
+  "name": "@optimziely/akamai-edgeworker-starter-kit",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rm -rf dist && rollup -c && cd dist && tar -czvf bundle.tgz bundle.json main.js && rm bundle.json main.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@optimizely/optimizely-sdk": "^4.9.1"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^20.0.0",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^13.0.4",
+    "@types/akamai-edgeworkers": "^1.0.6",
+    "rollup": "^2.56.2",
+    "rollup-plugin-copy": "^3.4.0",
+    "rollup-plugin-terser": "^7.0.2"
+  }
+}
