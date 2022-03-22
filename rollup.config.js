@@ -10,7 +10,7 @@ export default {
   input: 'src/main.js',
 
   /* Define external modules, which will be provided by the EdgeWorker platform */
-  external: ['log', 'http-request'],
+  external: ['log', 'http-request', 'cookies'],
 
   /* Define output format as an ES module and specify the output directory */
   output: {
