@@ -20,40 +20,59 @@ import {
   createInstance,
   enums as OptimizelyEnums,
 } from '@optimizely/optimizely-sdk/dist/optimizely.lite.es';
+
 import { getDatafile, dispatchEvent } from './optimizely_helper';
 
 const AKAMAI_CLIENT_ENGINE = "javascript-sdk/akamai-edgeworker";
 const COOKIE_NAME_OPTIMIZELY_VISITOR_ID = 'optimizely_visitor_id';
 const VARIABLE_NAME_USER_ID = "PMUSER_OPTIMIZELY_USER_ID";
+const VARIABLE_NAME_DECISION_EVENT = "PMUSER_OPTIMIZELY_DECISION_EVENT"; 
+
+const SHOULD_DISPATCH_EVENT = false;
+
 let logStash = [];
 
+// Generates a random 6 digit user id for demo purpose. For production uses, please use user Ids from your system
+// or autogenerate a uuid.
 function generateRandomUserId() {
   return `${Math.floor(Math.random() * 899999 + 100000)}`;
 }
 
-function log(message) {
+// Helper function to both log to the debug logger and print the same log to the response body.
+function logAndPrint(message) {
   logStash.push(message);
   logger.log(message);
 };
 
+/**
+ * onClientRequest is does the following.
+ * 1. Fetches the optimizely datafile based on the given sdk key.
+ * 2. Reads the user id from the cookie if available to enable sticky bucketing or generates a new one to be saved to the cookie.
+ * 3. Demonstrates creating an optimizely instance.
+ * 4. Demonstrates accessing optimizelyConfig object and prints datafile revision number.
+ * 5. Demonstrates obtaining a decision for a specific flag and dispatch logx event.
+ * 6. Demonstrates obtaining all decisions for all the available flags.
+ */
 export async function onClientRequest (request) {
   logStash = [];
   let cookies = new Cookies(request.getHeader('Cookie'));
 
   // Fetch user Id from the cookie if available so a returning user from same browser session always sees the same variation.
   const userId = cookies.get(COOKIE_NAME_OPTIMIZELY_VISITOR_ID) || generateRandomUserId();
+  
+  // onClienRequest handler does not allow setting the cookie. saving the user id in a variable
+  // so that it can be retrieved and set when onClientResponse handler is executed. 
   request.setVariable(VARIABLE_NAME_USER_ID, userId);
 
-  // fetch datafile from optimizely CDN and cache it with akamai for the given number of seconds
-  //const datafile = await getDatafile("YOUR_SDK_KEY_HERE");
-  const datafile = await getDatafile('DCJwYAA77k2BRcsrj3d9b');
+  const datafile = await getDatafile("YOUR_SDK_KEY_HERE");
 
   if (datafile === '') {
-    log(`[optimizely] Failed to fetch the datafile, please check the optimizely sdk key`);
+    logAndPrint(`[optimizely] Failed to fetch the datafile, please check the optimizely sdk key`);
     sendGenericReponse(request, logStash);
     return;    
   }
 
+  // Creating an optimizely SDK instance.
   const optimizelyClient = createInstance({
     datafile,
 
@@ -61,13 +80,6 @@ export async function onClientRequest (request) {
     logLevel: OptimizelyEnums.LOG_LEVEL.ERROR,
 
     clientEngine: AKAMAI_CLIENT_ENGINE,
-
-    /***
-     * Optional event dispatcher. Please uncomment the following line if you want to dispatch an impression event to optimizely logx backend.
-     * When enabled, an event is dispatched asynchronously. It does not impact the response time for a particular worker but it will
-     * add to the total compute time of the worker and can impact fastly billing.
-     */
-    // eventDispatcher: { dispatchEvent }
 
     /* Add other Optimizely SDK initialization options here if needed */
   });
@@ -79,37 +91,53 @@ export async function onClientRequest (request) {
     }
   );
 
+  if (SHOULD_DISPATCH_EVENT) {
+    logAndPrint('[optimizely] Adding a Notification Listener to Capture Event Payload');
+    
+    // The default event dispatching mechanism of optimizely SDK does not work with Akamai edgeworker because it does not support
+    // sending out more than one http sub request in onClientRequest handler. Optimizely SDK lets you add a notification listener
+    // that can notify when an event is logged. This peice of code is capturing the event payload and storing it in to akamai variable
+    // which will be later used in onClientResponse handler to dispatch the event to optimizely logx backend.
+    optimizelyClient.notificationCenter.addNotificationListener(OptimizelyEnums.NOTIFICATION_TYPES.LOG_EVENT, ({ params }) => {
+      // Set event payload in Akamai variable.
+      request.setVariable(VARIABLE_NAME_DECISION_EVENT, JSON.stringify(params));
+    });
+  }
+
   // --- Using Optimizely Config
   const optimizelyConfig = optimizelyClient.getOptimizelyConfig();
-  log(`[optimizely] Datafile Revision: ${optimizelyConfig.revision}`);
+  logAndPrint(`[optimizely] Datafile Revision: ${optimizelyConfig.revision}`);
 
   // --- For a single flag --- //
   const decision = optimizelyUserContext.decide("YOUR_FLAG_HERE");
   if (decision.enabled) {
-    log(
+    logAndPrint(
       `[optimizely] The Flag ${
         decision.flagKey
       } was Enabled for the user ${decision.userContext.getUserId()}`
     );
   } else {
-    log(
+    logAndPrint(
       `[optimizely] The Flag ${
         decision.flagKey
       } was Not Enabled for the user ${decision.userContext.getUserId()}`
     );
   }
 
+  // Clearing notification listener so that it does not call the hanlder above for all other decisions.
+  optimizelyClient.notificationCenter.clearNotificationListeners(OptimizelyEnums.NOTIFICATION_TYPES.LOG_EVENT);
+
   // --- For all flags --- //
   const allDecisions = optimizelyUserContext.decideAll();
   Object.entries(allDecisions).forEach(([flagKey, decision]) => {
     if (decision.enabled) {
-      log(
+      logAndPrint(
         `[optimizely] The Flag ${
           decision.flagKey
         } was Enabled for the user ${decision.userContext.getUserId()}`
       );
     } else {
-      log(
+      logAndPrint(
         `[optimizely] The Flag ${
           decision.flagKey
         } was Not Enabled for the user ${decision.userContext.getUserId()}`
@@ -120,8 +148,20 @@ export async function onClientRequest (request) {
   sendGenericReponse(request, logStash);
 }
 
+/**
+ * onClientResponse handler does the following.
+ * 1. onClientRequest handler does not allow setting the cookie. We are saving the cookie in a variable and then settig it here.
+ * 2. onClientRequest hanlder does not allow more than one http subrequests. We are dispatching the optimizely logx event from here.
+ */
 export async function onClientResponse (request, response) {
   const userId = request.getVariable(VARIABLE_NAME_USER_ID);
+  if (SHOULD_DISPATCH_EVENT) {
+    const eventPayload = request.getVariable(VARIABLE_NAME_DECISION_EVENT);
+    if (eventPayload) {
+      const eventResponseStatus = await dispatchEvent(eventPayload);
+      logger.log(`[optimizely] Optimizely Logx Event dispatched. Response status code: ${eventResponseStatus}`);
+    }
+  }
   const cookie = new SetCookie({
     name: COOKIE_NAME_OPTIMIZELY_VISITOR_ID,
     value: userId,

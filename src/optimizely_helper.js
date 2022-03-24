@@ -18,7 +18,9 @@ import { httpRequest } from 'http-request';
 
 export async function getDatafile(sdkKey) {
   let datafile = '';
-  // Make sure to enable caching to outgoing request
+  
+  // Akamai edgeworkers do not provide a way to cache the response through code.
+  // In order to cache Make sure to enable caching to outgoing request from Akamai control panel
   // https://techdocs.akamai.com/purge-cache/docs/cache-strategies
   const datafileResponse = await httpRequest(`https://cdn.optimizely.com/datafiles/${sdkKey}.json`);
   if (datafileResponse.ok) {
@@ -27,8 +29,16 @@ export async function getDatafile(sdkKey) {
   return datafile;
 }
  
-export function dispatchEvent({ url, params }) {
-  // Event cannot be dispatched in normal flow of `onClientRequest`
-  // Akamai Edgeworkers do not allow POST Subrequest
+export async function dispatchEvent(payload) {
+  const eventResponse = await httpRequest('https://ew.logx.optimizely.com/v1/events', {
+    method: 'POST',
+    headers: {
+      "Content-Type": "application/json",
+      "Content-Length": payload.length,
+    },
+    body: payload,
+  });
+
+  return eventResponse.status;
 }
  
