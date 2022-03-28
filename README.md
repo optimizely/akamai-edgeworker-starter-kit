@@ -9,55 +9,55 @@ The Optimizely starter kit for Akamai's Edge Workers embeds and extends our [Jav
 
 # How to use
 
-1. Create an EdgeWorker ID by following the documentation [here](https://techdocs.akamai.com/edgeworkers/docs/create-an-edgeworker-id-1).
+1. Create an [EdgeWorker ID](https://techdocs.akamai.com/edgeworkers/docs/create-an-edgeworker-id-1).
 
-2. Add the EdgeWorker Behavior by following the documentation [here](https://techdocs.akamai.com/edgeworkers/docs/add-the-edgeworker-behavior-1).
+2. Add the [EdgeWorker Behavior](https://techdocs.akamai.com/edgeworkers/docs/add-the-edgeworker-behavior-1).
 
-3. Follow the documentation [here](https://developer.akamai.com/getting-started/cli) to download and install the akamai CLI.
+3. Download and install the [Akamai CLI](https://developer.akamai.com/getting-started/cli).
 
 4. Install EdgeWorkers cli
     ```
-      akamai install edgeworkers
+    akamai install edgeworkers
     ```
 
-5. Setup Authentication credentials by following the documentation [here](https://techdocs.akamai.com/developer/docs/set-up-authentication-credentials).
+5. Setup [Authentication credentials](https://techdocs.akamai.com/developer/docs/set-up-authentication-credentials).
 
-6. Create a new folder and fetch the starter code from this template.
+6. Create a new folder and pull the code from this Starter kit.
 
     ```
-      curl -L https://github.com/optimizely/akamai-edgeworker-starter-kit/tarball/zeeshan/initial-implementation | tar --strip-components=1 -zx
+    curl -L https://github.com/optimizely/akamai-edgeworker-starter-kit/tarball/zeeshan/initial-implementation | tar --strip-components=1 -zx
     ```
 
     OR
 
     ```
-      wget --no-check-certificate https://github.com/optimizely/akamai-edgeworker-starter-kit/tarball/zeeshan/initial-implementation -O - | tar --strip-components=1 -zx
+    wget --no-check-certificate https://github.com/optimizely/akamai-edgeworker-starter-kit/tarball/zeeshan/initial-implementation -O - | tar --strip-components=1 -zx
     ```
 
 7. Install node modules.
   
     ```
-      npm install
+    npm install
     ```
 
-8. Add your Optimizely SDK key and flag in `src/main.js`.
+8. Add your Optimizely SDK key and flag in [src/main.js](src/main.js).
 
 9. Build the bundle.
   
     ```
-      npm run build
+    npm run build
     ```
 
 10. Upload the bundle
 
     ```
-      akamai edgeworkers upload --bundle="dist/bundle.tgz" {WORKER_ID}
+    akamai edgeworkers upload --bundle="dist/bundle.tgz" {WORKER_ID}
     ```
 
 11. Activate the version
     
     ```
-      akamai edgeworkers activate {WORKER_ID} {ENVIRONMENT} {EDGEWORKER_VERSION}
+    akamai edgeworkers activate {WORKER_ID} {ENVIRONMENT} {EDGEWORKER_VERSION}
     ```
 
-12. To receive debug logs in the response headers, follow the documentation [here](https://techdocs.akamai.com/edgeworkers/docs/enable-enhanced-debug-headers) to enable Advanced debug headers.
+12. Enable [Advanced debug headers](https://techdocs.akamai.com/edgeworkers/docs/enable-enhanced-debug-headers) to receive debug logs in the response headers.
