@@ -67,6 +67,3 @@ For more information on how Optimizely Full Stack SDKs bucket visitors, see [her
     ```
 
 12. Enable [Advanced debug headers](https://techdocs.akamai.com/edgeworkers/docs/enable-enhanced-debug-headers) to receive debug logs in the response headers.
-
-# How it Works
-
