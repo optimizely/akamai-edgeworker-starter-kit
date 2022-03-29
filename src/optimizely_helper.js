@@ -20,7 +20,7 @@ export async function getDatafile(sdkKey) {
   let datafile = '';
   
   // Akamai edgeworkers do not provide a way to cache the response through code.
-  // In order to cache Make sure to enable caching to outgoing request from Akamai control panel
+  // In order to cache, make sure to enable caching to outgoing request from Akamai control panel
   // https://techdocs.akamai.com/purge-cache/docs/cache-strategies
   const datafileResponse = await httpRequest(`https://cdn.optimizely.com/datafiles/${sdkKey}.json`);
   if (datafileResponse.ok) {
@@ -41,4 +41,3 @@ export async function dispatchEvent(payload) {
 
   return eventResponse.status;
 }
- 
