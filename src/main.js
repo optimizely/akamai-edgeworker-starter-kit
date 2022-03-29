@@ -38,32 +38,32 @@ function generateRandomUserId() {
   return `${Math.floor(Math.random() * 899999 + 100000)}`;
 }
 
-// Helper function to both log to the debug logger and print the same log to the response body.
+// Helper function to log to the debug logger and print to the response body.
 function logAndPrint(message) {
   logStash.push(message);
   logger.log(message);
 };
 
 /**
- * onClientRequest is does the following.
- * 1. Fetches the optimizely datafile based on the given sdk key.
- * 2. Reads the user id from the cookie if available to enable sticky bucketing or generates a new one to be saved to the cookie.
- * 3. Demonstrates creating an optimizely instance.
- * 4. Demonstrates accessing optimizelyConfig object and prints datafile revision number.
- * 5. Demonstrates obtaining a decision for a specific flag and dispatch logx event.
- * 6. Demonstrates obtaining all decisions for all the available flags.
+ * 1. Fetch the optimizely datafile based on the given sdk key.
+ * 2. Read the user id from the cookie if available to enable sticky bucketing or generate a new one to be saved to the cookie.
+ * 3. Create an optimizely instance.
+ * 4. Access optimizelyConfig object and print datafile revision number.
+ * 5. Get a decision for a specific flag and dispatch logx event.
+ * 6. Get decisions for all the available flags.
  */
 export async function onClientRequest (request) {
   logStash = [];
   let cookies = new Cookies(request.getHeader('Cookie'));
 
-  // Fetch user Id from the cookie if available so a returning user from same browser session always sees the same variation.
+  // Fetch user Id from the cookie if available to make sure that a returning user from same browser session always sees the same variation.
   const userId = cookies.get(COOKIE_NAME_OPTIMIZELY_VISITOR_ID) || generateRandomUserId();
   
-  // onClienRequest handler does not allow setting the cookie. saving the user id in a variable
-  // so that it can be retrieved and set when onClientResponse handler is executed. 
+  // onClienRequest handler does not allow setting the cookie. Saving the user id in a variable
+  // to be retrieved and set when onClientResponse handler is executed later on. 
   request.setVariable(VARIABLE_NAME_USER_ID, userId);
 
+  // Add your SDK here.
   const datafile = await getDatafile("YOUR_SDK_KEY_HERE");
 
   if (datafile === '') {
@@ -148,10 +148,9 @@ export async function onClientRequest (request) {
   sendGenericReponse(request, logStash);
 }
 
-/**
- * onClientResponse handler does the following.
+/** 
  * 1. onClientRequest handler does not allow setting the cookie. We are saving the cookie in a variable and then settig it here.
- * 2. onClientRequest hanlder does not allow more than one http subrequests. We are dispatching the optimizely logx event from here.
+ * 2. onClientRequest handler does not allow more than one http subrequests. We are dispatching the optimizely logx event from here.
  */
 export async function onClientResponse (request, response) {
   const userId = request.getVariable(VARIABLE_NAME_USER_ID);
