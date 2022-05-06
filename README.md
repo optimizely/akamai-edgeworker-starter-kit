@@ -66,4 +66,8 @@ For more information on how Optimizely Full Stack SDKs bucket visitors, see [her
     akamai edgeworkers activate {WORKER_ID} {ENVIRONMENT} {EDGEWORKER_VERSION}
     ```
 
+    `WORKER_ID`: Unique ID for you edgeworker. This can be obtained from the Akamai control center.  
+    `ENVIRONMENT`: The environment the edgeworker is being deployed on.  
+    `EDGEWORKER_VERSION`: The custom version of the edge worker as mentioned in `bundle.json`. This should be updated on every new deployment.  
+
 12. Enable [Advanced debug headers](https://techdocs.akamai.com/edgeworkers/docs/enable-enhanced-debug-headers) to receive debug logs in the response headers.

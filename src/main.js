@@ -32,11 +32,27 @@ const SHOULD_DISPATCH_EVENT = false;
 
 let logStash = [];
 
-// Generates a random 6 digit user id for demo purpose. For production uses, please use user Ids from your system
-// or autogenerate a uuid.
-function generateRandomUserId() {
-  return `${Math.floor(Math.random() * 899999 + 100000)}`;
-}
+/** 
+ * Generates a unique 16 digit user id for demo purpose. For production use, please use user Ids from your system
+ * or autogenerate a uuid using a standard library such as https://www.npmjs.com/package/uuid.
+ * 
+ * Attribution:
+ * This unique id generation function was taken from a Stack Overflow question and modified to fit our use case.
+ * https://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid
+ * This is the answer that was used
+ * https://stackoverflow.com/a/21963136
+ * Question by Jason Cohen:
+ * https://stackoverflow.com/users/4926/jason-cohen
+ * Answer by Jeff Ward:
+ * https://stackoverflow.com/users/1026023/jeff-ward
+ */
+ var lut = []; for (var i=0; i<256; i++) { lut[i] = (i<16?'0':'')+(i).toString(16); }
+ export function generateRandomUserId() {
+   var d0 = Math.random()*0xffffffff|0;
+   var d1 = Math.random()*0xffffffff|0;
+   return lut[d0&0xff]+lut[d0>>8&0xff]+'-'+lut[d0>>16&0xff]+lut[d0>>24&0xff]+'-'+
+   lut[d1&0xff]+lut[d1>>8&0xff]+'-'+lut[d1>>16&0x0f|0x40]+lut[d1>>24&0xff];
+ }
 
 // Helper function to log to the debug logger and print to the response body.
 function logAndPrint(message) {
@@ -59,7 +75,7 @@ export async function onClientRequest (request) {
   // Fetch user Id from the cookie if available to make sure that a returning user from same browser session always sees the same variation.
   const userId = cookies.get(COOKIE_NAME_OPTIMIZELY_VISITOR_ID) || generateRandomUserId();
   
-  // onClienRequest handler does not allow setting the cookie. Saving the user id in a variable
+  // onClientRequest handler does not allow setting the cookie. Saving the user id in a variable
   // to be retrieved and set when onClientResponse handler is executed later on. 
   request.setVariable(VARIABLE_NAME_USER_ID, userId);
 
