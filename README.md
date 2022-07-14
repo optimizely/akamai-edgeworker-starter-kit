@@ -4,7 +4,7 @@
 
 You can deploy code behind feature flags, experiment with A/B tests, and roll out or roll back features immediately. All of this functionality is available with minimal performance impact via easy-to-use, open source SDKs.
 
-# Optimizely Starter Kit
+## Optimizely + Akamai EdgeWorkers Starter Kit
 The Optimizely starter kit for Akamai's Edge Workers embeds and extends our [Javascript Node SDK](https://docs.developers.optimizely.com/experimentation/v4.0.0-full-stack/docs/javascript-node-sdk) to provide a starting point for you to implement experimentation and feature flagging for your experiences at the edge. For a guide to getting started with our platform more generally, this can be combined with the steps outlined in our [Javascript Quickstart](https://docs.developers.optimizely.com/experimentation/v4.0.0-full-stack/docs/javascript-node-quickstart).
 
 ### Identity Management
@@ -13,7 +13,7 @@ Out of the box, Optimizely's Full Stack SDKs require a user-provided identifier 
 ### Bucketing
 For more information on how Optimizely Full Stack SDKs bucket visitors, see [here](https://docs.developers.optimizely.com/experimentation/v4.0.0-full-stack/docs/how-bucketing-works).
 
-# How to use
+## How to use
 
 1. Create an [EdgeWorker ID](https://techdocs.akamai.com/edgeworkers/docs/create-an-edgeworker-id-1).
 
@@ -66,8 +66,21 @@ For more information on how Optimizely Full Stack SDKs bucket visitors, see [her
     akamai edgeworkers activate {WORKER_ID} {ENVIRONMENT} {EDGEWORKER_VERSION}
     ```
 
-    `WORKER_ID`: Unique ID for your edgeworker. This can be obtained from the Akamai control center.  
-    `ENVIRONMENT`: The environment the edgeworker is being deployed on.  
-    `EDGEWORKER_VERSION`: The custom version of the edge worker as mentioned in `bundle.json`. This should be updated on every new deployment.  
+    `WORKER_ID`: Unique ID for your EdgeWorker. This can be obtained from the Akamai control center.  
+    `ENVIRONMENT`: The environment the EdgeWorker is being deployed on.  
+    `EDGEWORKER_VERSION`: The custom version of the EdgeWorker as mentioned in `bundle.json`. This should be updated on every new deployment.  
 
 12. Enable [Advanced debug headers](https://techdocs.akamai.com/edgeworkers/docs/enable-enhanced-debug-headers) to receive debug logs in the response headers.
+
+## Akamai EdgeWorkers
+### Why use Akamai Edge Workers?
+ - **Innovation**: Allows development teams to freely build logic safeguarded against unwanted usage through security protections provided by Akamai.
+ - **Improved time to market**: Developers can manage Akamai and deliver their code in JavaScript without having to learn a new, propietary language. 
+ - **Logic is executed close to users**: Code is sent across the world's largest distributed network, the Akamai Edge.
+ - **Decreased overhead at origin**: Allows developers to create code and not worry about internal infrastructure or increased traffic at the origin.
+
+### Akamai EdgeWorkers use cases
+EdgeWorkers allow you to write and deploy JavaScript functions at the edge. For example use cases, refer to the [EdgeWorkers documentation](https://techdocs.akamai.com/edgeworkers/docs/limitations).
+
+### Restrictions and Limitations 
+- There are some restrictions to using EdgeWorkers. Read the [Akamai official documentation](https://techdocs.akamai.com/edgeworkers/docs/limitations) for the most recent product limits and resource tier limitations.
