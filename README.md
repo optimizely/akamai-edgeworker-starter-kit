@@ -34,7 +34,7 @@ For more information on how Optimizely Full Stack SDKs bucket visitors, see [her
     curl -L https://github.com/optimizely/akamai-edgeworker-starter-kit/tarball/zeeshan/initial-implementation | tar --strip-components=1 -zx
     ```
 
-    OR
+    or
 
     ```
     wget --no-check-certificate https://github.com/optimizely/akamai-edgeworker-starter-kit/tarball/zeeshan/initial-implementation -O - | tar --strip-components=1 -zx
@@ -84,3 +84,11 @@ EdgeWorkers allow you to write and deploy JavaScript functions at the edge. For 
 
 ### Restrictions and Limitations 
 - There are some restrictions to using EdgeWorkers. Read the [Akamai official documentation](https://techdocs.akamai.com/edgeworkers/docs/limitations) for the most recent product limits and resource tier limitations.
+
+## Additional resources
+- [Akamai Developer EdgeWorkers](https://developer.akamai.com/akamai-edgeworkers-overview)
+- [Akamai EdgeWorkers official documentation](https://techdocs.akamai.com/edgeworkers/docs/welcome-to-edgeworkers)
+- [Akamai EdgeWorkers with Optimizely](https://dash.readme.com/project/experimentation/v4.0.0-full-stack/docs/akamai)
+
+## Contributing
+Please see [CONTRIBUTING](CONTRIBUTING.md).
