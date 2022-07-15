@@ -88,7 +88,7 @@ EdgeWorkers allow you to write and deploy JavaScript functions at the edge. For 
 ## Additional resources
 - [Akamai Developer EdgeWorkers](https://developer.akamai.com/akamai-edgeworkers-overview)
 - [Akamai EdgeWorkers official documentation](https://techdocs.akamai.com/edgeworkers/docs/welcome-to-edgeworkers)
-- [Akamai EdgeWorkers with Optimizely](https://dash.readme.com/project/experimentation/v4.0.0-full-stack/docs/akamai)
+- [Akamai EdgeWorkers with Optimizely](https://docs.developers.optimizely.com/experimentation/v4.0.0-full-stack/docs/akamai)
 
 ## Contributing
 Please see [CONTRIBUTING](CONTRIBUTING.md).
