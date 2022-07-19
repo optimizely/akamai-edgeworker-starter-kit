@@ -22,9 +22,7 @@ For more information on how Optimizely Full Stack SDKs assign users to feature f
 ## How to use
 
 ### Prerequisites
-In order to use this starter kit, you should have:
-
-- An Optimizely account. If you do not have an account, you can [register for a free account](https://www.optimizely.com/products/intelligence/full-stack-experimentation/).
+You will need have Optimizely account before following this starter kit. If you do not have an account, you can [register for a free account](https://www.optimizely.com/products/intelligence/full-stack-experimentation/).
 
 ### Get started
 1. Create an [EdgeWorker ID](https://techdocs.akamai.com/edgeworkers/docs/create-an-edgeworker-id-1).
