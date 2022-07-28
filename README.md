@@ -90,4 +90,4 @@ Please see [CONTRIBUTING](CONTRIBUTING.md).
 
 - [Akamai EdgeWorkers](https://developer.akamai.com/akamai-edgeworkers-overview)
 - [Akamai EdgeWorkers official documentation](https://techdocs.akamai.com/edgeworkers/docs/welcome-to-edgeworkers)
-- [Akamai EdgeWorkers with Optimizely documentation](https://docs.developers.optimizely.com/experimentation/v4.0.0-full-stack/docs/akamai)
+- [Akamai EdgeWorkers with Optimizely documentation](https://docs.developers.optimizely.com/experimentation/v4.0.0-full-stack/docs/akamai-edgeworkers)
