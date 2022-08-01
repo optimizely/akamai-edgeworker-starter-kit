@@ -1,27 +1,37 @@
 # Optimizely Full Stack Feature Flags and Experimentation
 
-[Optimizely Full Stack](https://docs.developers.optimizely.com/full-stack/docs) is a feature flagging and experimentation platform for websites, mobile     apps, chatbots, APIs, smart devices, and anything else with a network connection.
+[Optimizely Full Stack](https://docs.developers.optimizely.com/experimentation/v4.0.0-full-stack/docs) is a feature flagging and experimentation platform for websites, mobile apps, chatbots, APIs, smart devices, and anything else with a network connection.
 
-You can deploy code behind feature flags, experiment with A/B tests, and roll out or roll back features immediately. All of this functionality is available with minimal performance impact via easy-to-use, open source SDKs.
+You can deploy code behind feature flags, experiment with A/B tests, and roll out or roll back features immediately. All of this functionality is available with minimal performance impact through easy-to-use, open source SDKs.
 
-# Optimizely Starter Kit
-The Optimizely starter kit for Akamai's Edge Workers embeds and extends our [Javascript SDK](https://docs.developers.optimizely.com/full-stack/v4.0/docs/javascript-node) to provide a starting point for you to implement experimentation and feature flagging for your experiences at the edge. For a guide to getting started with our platform more generally, this can be combined with the steps outlined in our [Javascript Quickstart here](https://docs.developers.optimizely.com/full-stack/v4.0/docs/javascript-node).
+--- 
+
+## Optimizely + Akamai EdgeWorkers Starter Kit
+
+> Starter Kit for running Optimizely Full Stack feature flags and experiments on the [Akamai EdgeWorkers](https://developer.akamai.com/akamai-edgeworkers-overview) service.
+
+The Optimizely starter kit for Akamai's EdgeWorkers embeds and extends our [Javascript Node SDK](https://docs.developers.optimizely.com/experimentation/v4.0.0-full-stack/docs/javascript-node-sdk) to provide a starting point for you to implement experimentation and feature flagging for your experiences at the edge. For a guide to getting started with our platform more generally, this can be combined with the steps outlined in our [Javascript Quickstart](https://docs.developers.optimizely.com/experimentation/v4.0.0-full-stack/docs/javascript-node-quickstart).
 
 ### Identity Management
-Out of the box, Optimizely's Full Stack SDKs require a user-provided identifier to be passed in at runtime to drive experiment and feature flag decisions. This example generates a unique id, stores it in a cookie and reuses it to make the decisions sticky. Another common approach would be to use an existing unique identifier available within your application.
+Out of the box, Optimizely's Full Stack SDKs require a user-provided identifier to be passed in at runtime to drive experiment and feature flag decisions. This example generates a unique ID, stores it in a cookie and reuses it to make the decisions sticky. Alternatively, you can use an existing unique identifier available within your application and pass it in as the value for the `OPTIMIZELY_USER_ID` cookie.
 
 ### Bucketing
-For more information on how Optimizely Full Stack SDKs bucket visitors, see [here](https://docs.developers.optimizely.com/full-stack/v4.0/docs/how-bucketing-works).
+For more information on how Optimizely Full Stack SDKs assign users to feature flags and experiments, see [the documentation on how bucketing works](https://docs.developers.optimizely.com/experimentation/v4.0.0-full-stack/docs/how-bucketing-works). 
 
-# How to use
 
+## How to use
+
+### Prerequisites
+You will need have Optimizely account before following this starter kit. If you do not have an account, you can [register for a free account](https://www.optimizely.com/products/intelligence/full-stack-experimentation/).
+
+### Get started
 1. Create an [EdgeWorker ID](https://techdocs.akamai.com/edgeworkers/docs/create-an-edgeworker-id-1).
 
 2. Add the [EdgeWorker Behavior](https://techdocs.akamai.com/edgeworkers/docs/add-the-edgeworker-behavior-1).
 
-3. Download and install the [Akamai CLI](https://developer.akamai.com/getting-started/cli).
+3. Install the [Akamai CLI](https://developer.akamai.com/getting-started/cli).
 
-4. Install EdgeWorkers cli
+4. Install the [EdgeWorkers CLI](https://techdocs.akamai.com/edgeworkers/docs/akamai-cli#edgeworkers-cli).
     ```
     akamai install edgeworkers
     ```
@@ -31,13 +41,13 @@ For more information on how Optimizely Full Stack SDKs bucket visitors, see [her
 6. Create a new folder and pull the code from this Starter kit.
 
     ```
-    curl -L https://github.com/optimizely/akamai-edgeworker-starter-kit/tarball/zeeshan/initial-implementation | tar --strip-components=1 -zx
+    curl -L https://github.com/optimizely/akamai-edgeworker-starter-kit/tarball/main | tar --strip-components=1 -zx
     ```
 
-    OR
+    or
 
     ```
-    wget --no-check-certificate https://github.com/optimizely/akamai-edgeworker-starter-kit/tarball/zeeshan/initial-implementation -O - | tar --strip-components=1 -zx
+    wget --no-check-certificate https://github.com/optimizely/akamai-edgeworker-starter-kit/tarball/main -O - | tar --strip-components=1 -zx
     ```
 
 7. Install node modules.
@@ -46,7 +56,7 @@ For more information on how Optimizely Full Stack SDKs bucket visitors, see [her
     npm install
     ```
 
-8. Add your Optimizely SDK key and flag in [src/main.js](src/main.js).
+8. Add your Optimizely SDK key and flag in [src/main.js](src/main.js). Your SDK keys can be found in the Optimizely application under **Settings**.
 
 9. Build the bundle.
   
@@ -66,8 +76,18 @@ For more information on how Optimizely Full Stack SDKs bucket visitors, see [her
     akamai edgeworkers activate {WORKER_ID} {ENVIRONMENT} {EDGEWORKER_VERSION}
     ```
 
-    `WORKER_ID`: Unique ID for you edgeworker. This can be obtained from the Akamai control center.  
-    `ENVIRONMENT`: The environment the edgeworker is being deployed on.  
-    `EDGEWORKER_VERSION`: The custom version of the edge worker as mentioned in `bundle.json`. This should be updated on every new deployment.  
+    `WORKER_ID`: Unique ID for your EdgeWorker. This can be obtained from the Akamai control center.  
+    `ENVIRONMENT`: The environment the EdgeWorker is being deployed on.  
+    `EDGEWORKER_VERSION`: The custom version of the EdgeWorker as mentioned in `bundle.json`. This should be updated on every new deployment.  
 
 12. Enable [Advanced debug headers](https://techdocs.akamai.com/edgeworkers/docs/enable-enhanced-debug-headers) to receive debug logs in the response headers.
+
+## Contributing
+
+Please see [CONTRIBUTING](CONTRIBUTING.md).
+
+## Additional resources
+
+- [Akamai EdgeWorkers](https://developer.akamai.com/akamai-edgeworkers-overview)
+- [Akamai EdgeWorkers official documentation](https://techdocs.akamai.com/edgeworkers/docs/welcome-to-edgeworkers)
+- [Akamai EdgeWorkers with Optimizely documentation](https://docs.developers.optimizely.com/experimentation/v4.0.0-full-stack/docs/akamai-edgeworkers)
