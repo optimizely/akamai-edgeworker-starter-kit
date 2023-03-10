@@ -8,7 +8,7 @@ Optimizely Rollouts is [free feature flags](https://www.optimizely.com/free-feat
 
 ## Get Started
 
-Refer to the [Optimizely Akamai EdgeWorkers Starter Kit documentation page](https://docs.developers.optimizely.com/experimentation/v4.0.0-full-stack/docs/akamai-edgeworkers) for detailed instructions about using this starter kit.
+Refer to the [Optimizely Akamai EdgeWorkers Starter Kit documentation](https://docs.developers.optimizely.com/experimentation/v4.0.0-full-stack/docs/akamai-edgeworkers) for detailed instructions about using this starter kit.
 
 ### Prerequisites
 
@@ -87,7 +87,7 @@ The Optimizely starter kit for Akamai's EdgeWorkers embeds and extends our [Java
 
 > Note: This starter kit in particular makes use of the "Lite" version of our Javascript SDK for Node.js which explicitly excludes the datafile manager and event processor features for better performance. As a result, it is expected that you will provide the datafile manually to the Optimizely SDK either through a local file reference or by using the provided platform-specific `getDatafile()` helper to load in your Optimizely project's datafile.
 
-### Initializing and Using Optimizely
+### Initialization
 
 Sample code is included in `src/main.js` that shows examples of initializing and using the Optimizely JavaScript (Node) SDK interface for performing common functions such as creating user context, adding a notification listener, and making a decision based on the created user context.
 
@@ -96,19 +96,24 @@ Additional platform-specific code is included in `src/optimizely_helper.js` whic
 ## Additional Resources and Concepts
 
 ### Identity Management
+
 Out of the box, Optimizely's Feature Experimentation SDKs require a user-provided identifier to be passed in at runtime to drive experiment and feature flag decisions. This example generates a unique ID, stores it in a cookie and reuses it to make the decisions sticky. Alternatively, you can use an existing unique identifier available within your application and pass it in as the value for the `OPTIMIZELY_USER_ID` cookie.
 
 ### Bucketing
+
 For more information on how Optimizely Feature Experimentation SDKs assign users to feature flags and experiments, see [the documentation on how bucketing works](https://docs.developers.optimizely.com/experimentation/v4.0.0-full-stack/docs/how-bucketing-works). 
 
 ### Akamai EdgeWorkers
+
 For more information about Akamai EdgeWorkers, you may visit the following resources:
 
 - [Akamai EdgeWorkers Product Overview](https://developer.akamai.com/akamai-edgeworkers-overview)
 - [Akamai EdgeWorkers Official Documentation](https://techdocs.akamai.com/edgeworkers/docs/welcome-to-edgeworkers)
 - [Optimizely Akamai EdgeWorkers Starter Kit Documentation](https://docs.developers.optimizely.com/experimentation/v4.0.0-full-stack/docs/akamai-edgeworkers)
 
-## Contributing
+## SDK Development
+
+### Contributing
 
 Please see [CONTRIBUTING](CONTRIBUTING.md).
 
@@ -139,8 +144,6 @@ Please see [CONTRIBUTING](CONTRIBUTING.md).
 - Swift - https://github.com/optimizely/swift-sdk
 
 ### Other Optimizely Edge Starter Kits
-
-- Akamai EdgeWorkers - https://github.com/optimizely/akamai-edgeworker-starter-kit
 
 - AWS Lambda@Edge - https://github.com/optimizely/aws-lambda-at-edge-starter-kit
 
