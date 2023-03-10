@@ -140,12 +140,12 @@ Please see [CONTRIBUTING](CONTRIBUTING.md).
 
 ### Other Optimizely Edge Starter Kits
 
-- Akamai EdgeWorkers - https://github.com/optimizely/agent
+- Akamai EdgeWorkers - https://github.com/optimizely/akamai-edgeworker-starter-kit
 
-- AWS Lambda@Edge - https://github.com/optimizely/android-sdk
+- AWS Lambda@Edge - https://github.com/optimizely/aws-lambda-at-edge-starter-kit
 
-- Cloudflare Workers - https://github.com/optimizely/optimizely-flutter-sdk
+- Cloudflare Workers - https://github.com/optimizely/cloudflare-worker-template
 
-- Fastly Compute@Edge - https://github.com/optimizely/csharp-sdk
+- Fastly Compute@Edge - https://github.com/optimizely/fastly-compute-starter-kit
 
-- Vercel Functions - https://github.com/optimizely/optimizely-flutter-sdk
+- Vercel Functions - https://github.com/optimizely/vercel-examples/tree/main/edge-functions/feature-flag-optimizely
