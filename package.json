@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@optimizely/optimizely-sdk": "^4.9.1"
+    "@optimizely/optimizely-sdk": "^5.3.4"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^20.0.0",

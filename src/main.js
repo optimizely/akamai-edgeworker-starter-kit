@@ -23,6 +23,14 @@ import {
 
 import { getDatafile, dispatchEvent } from './optimizely_helper';
 
+// Important: crypto and TextEncoder are not available globally in Akamai EdgeWorkers.
+// We need to import them and set them as globalThis to make them available in the worker to get the SDK working.
+import { crypto } from 'crypto'
+import { TextEncoder} from 'encoding'
+
+globalThis.crypto = crypto
+globalThis.TextEncoder = TextEncoder
+
 const AKAMAI_CLIENT_ENGINE = "javascript-sdk/akamai-edgeworker";
 const COOKIE_NAME_OPTIMIZELY_VISITOR_ID = 'optimizely_visitor_id';
 const VARIABLE_NAME_USER_ID = "PMUSER_OPTIMIZELY_USER_ID";
